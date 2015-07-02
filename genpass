@@ -1,0 +1,224 @@
+#!/bin/bash
+#################################################################
+#   Rotary Random Password Generator (Enginner varsion)         #
+#                     By Robert D. Wei (Freedman) 2014 June     #
+#                                               License: GPL 2  #
+#################################################################
+SysMax=2147483647
+Lcase='abcdefghijklmnopqrstuvwxyz'
+Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+Nums='0123456789'
+Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+color="1"
+lnth=12
+
+
+function helpPage() {
+    echo -e "\n*** Rotary Random Password Generator ***\n"
+    echo 'Use "'$0' [-a] [-c|-n] [length of password] [l][u][r][n][s] [-s ...]"'
+    echo "    l:  lowercase   u:  uppercase   r:  random-case"
+    echo "    n:  numbers     s:  other symbol    ( default:  luns )"
+    echo "    -e:  easy mode, use 'lnursrn' as the composition of the candidates"
+    echo "    -a:  auto generate from /dev/random ( NOT RECOMMENDED! )"
+    echo "    -c/n:  color / no color ( default: c )"
+    echo "    -s:  use the following string as candidates"
+    echo -e "\nPress '[Enter]' and generate one random character each time.\n"
+    echo "Note:  Prepare yourself, then execute this program and get the password."
+    echo "       DO NOT re-generate a password for some unimportant reasons."
+    echo "       Over filtering will turn your random password predictable.  For"
+    echo "       example, throwing away nine passwords from ten only because"
+    echo "       they are too hard to remember, then only 10% of all possible"
+    echo "       passwords will be use.  An attacker may speed up ten times"
+    echo "       on guessing it by knowing that."
+    echo -e " -- Easy passwords aren't strong, strong passwords aren't easy. --\n"
+}
+
+function errMsg() {
+    echo -e '\nUse "'$0' [-a] [-c|-n] [length of password] [l][u][r][n][s] [-s ...]"'
+    echo -e '\n   or "'$0' -h|--help" for help.\n'
+}
+
+                ##########################
+#################     Program start      #######################
+                ##########################
+if [ "$#" == "1" ] && [ "$1" == "-h" ] || [ "$1" == "--help" ] ; then
+  helpPage
+  exit 0
+fi 
+
+##########################
+#    read parameters     #
+##########################
+chrCmp=""
+rotor=""
+while [ "$1" != "" ] ; do
+  #### get length ####
+  arg=$1
+  while [ "$arg" != "${arg%[0-9]}" ] ; do arg="${arg%[0-9]}" ; done
+  if [ "$arg" == "" ] ; then
+    lnth=$1
+    shift
+    continue
+  fi
+
+  #### get composition of candidates ####
+  arg=$1
+  while [ "$arg" != "${arg%[lurns]}" ] ; do arg="${arg%[lurns]}" ; done
+  if [ -z "$arg" ] ; then
+    chrCmp+=$1
+    shift
+    continue
+  fi
+
+  #### get candidate character string ####
+  if [ "$1" == "-s" ] ; then
+    if [ -z "$2" ] ; then
+      err="1"
+    else
+      rotor+="$2"
+      shift
+    fi
+  #### other parameters ####
+  elif [ "${1:0:1}" = "-" ] && [ ${#1} -gt 1 ] ; then
+    for ((cnt=1; cnt<${#1}; cnt++)) ; do
+      case "${1:$cnt:1}" in
+        "e")
+          ezmod="1"
+          ;;
+        "a")
+          auto="1"
+          ;;
+        "c")
+          color="1"
+          ;;
+        "n")
+          color=""
+          ;;
+        *)
+          err="1"
+          ;; 
+      esac
+    done
+  else
+    err="1"
+  fi
+
+  #####################################
+  #    show error message and exit    #
+  #####################################
+  if [ "$err" == "1" ] ; then
+    errMsg
+    exit 1
+  fi
+
+  shift
+done
+
+#########################################
+#    composing the candidate string     #
+#########################################
+if [ -n "$ezmod" ] ; then chrCmp+="lnursrn" ; fi
+if [ -z "$chrCmp" ] && [ -z "$rotor" ] ; then chrCmp="luns" ; fi
+
+declare -i trn=0 R=0
+for ((n=0; n<${#chrCmp}; n++)) ; do
+  case "${chrCmp:$n:1}" in
+  "l")
+    rotor+="$Lcase"
+    ;;
+  "u")
+    rotor+="$Ucase"
+    ;;
+  "r")
+    if [ "$trn" == "0" ] ; then
+      trn=14
+      R=$RANDOM
+    fi
+    if [ $(($R % 2)) == 0 ] ; then
+      rotor+="$Lcase"
+    else
+      rotor+="$Ucase"
+    fi
+    R=R/2
+    trn=trn-1
+    ;;
+  "n")
+    rotor+="$Nums"
+    ;;
+  "s")
+    rotor+="$Symbs"
+    ;;
+  esac
+done
+
+############################
+#    generate password     #
+############################
+declare -i rotrSiz=${#rotor} wndow=0
+rndPaswd=""
+
+if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
+  declare -i wndoBndry=$SysMax-$SysMax%$rotrSiz
+
+  for ((cnt=0; cnt<$lnth; cnt++)) ; do
+    until read -t 0 ; do
+        wndow=(wndow+1)%wndoBndry
+    done
+    read
+    echo -ne '\E[1A'"$wndow / $rotrSiz = $(($wndow/$rotrSiz))"'\E[K'
+    wndow=wndow%rotrSiz
+    rndPaswd+="${rotor:$wndow:1}"
+  done
+
+else      ############### Auto mode, from /dev/rendom
+  declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
+  while [ $unitBndry -lt $rotrSiz ] ; do
+    unitBits=unitBits+1
+    unitBndry=unitBndry*2
+  done
+
+  for ((cnt=0; cnt<$lnth; cnt++)) ; do
+    wndow=rotrSiz
+    until [ $wndow -lt $rotrSiz ] ; do
+      while [ $rndBits -lt $unitBits ] ; do
+        rndDat=rndDat+$(od -A n -i -N 1 /dev/random)*2**rndBits
+        rndBits=rndBits+8
+      done
+      wndow=rndDat%unitBndry
+      rndDat=rndDat/unitBndry
+      rndBits=rndBits-unitBits
+    done
+    rndPaswd+="${rotor:$wndow:1}"
+  done
+fi
+
+
+####  add color code into password
+if [ -n "$color" ] ; then
+  rndPaswd="$(echo " $rndPaswd" | sed 's/\\/\\\\/g ;
+                   s/\([a-z][a-z]*\)/ \1 /g ;
+                   s/\([A-Z][A-Z]*\)/ \1 /g ; s/  / /g ; s/ $// ;
+                   s/ \([a-z][a-z]*\)/\\E[34m\1/g ;
+                   s/ \([A-Z][A-Z]*\)/\\E[31m\1/g ;
+                   s/ /\\E[30m/g ; s/^/\\E[47m/ ; s/$/\\E[0m/')"
+fi
+
+#############################
+#    Output the password    #
+#############################
+if [ -n "$auto" ] ; then
+  if [ -z "$color" ] ; then
+    echo "$rndPaswd"
+  else
+    echo -e "$rndPaswd"
+  fi
+else
+  echo -ne "\n\E[F"
+  if [ -z "$color" ] ; then
+    echo -n "$rndPaswd"
+    echo -e "\E[K"
+  else
+    echo -e "$rndPaswd\E[K"
+  fi
+fi
+
