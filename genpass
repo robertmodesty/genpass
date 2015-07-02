@@ -158,7 +158,7 @@ if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
     rndPaswd+="${rotor:$wndow:1}"
   done
 
-else      ############### Auto mode, from /dev/rendom
+else      ############### Auto mode, from /dev/random
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
   while [ $unitBndry -lt $rotrSiz ] ; do
     unitBits=unitBits+1
