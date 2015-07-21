@@ -12,9 +12,43 @@ Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
 color=""
 lnth=8
 
-slowDown='請減慢速度！'
+case $LANG in
+  zh_TW*)
+    slowDown='請減慢速度！'
+    ;;
+  *)  
+    slowDown='Slow down, please!'
+    ;;
+esac
 
 function helpPage() {
+    case $LANG in
+      zh_TW*) helpPageCT ;;
+      *) helpPageEng ;;
+    esac
+}
+
+function helpPageEng() {
+    echo -e "\n*** Rotary Random Password Generator ***\n"
+    echo 'Use "'$0' [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"'
+    echo "    l:  lowercase   u:  uppercase"
+    echo "    n:  numbers     s:  other symbol    ( default:  luns )"
+    echo "    -e:  easy mode, use 'lsunln' as the composition of the candidates"
+    echo "    -a:  auto generate from /dev/random ( NOT RECOMMENDED! )"
+    echo "    -c/n:  color / no color ( default: n )"
+    echo "    -s:  use the following string as candidates"
+    echo -e "\nPress '[Enter]' and generate one random character each time.\n"
+    echo "Note:  Prepare yourself, then execute this program and get the password."
+    echo "       DO NOT re-generate a password for some unimportant reasons."
+    echo "       Over filtering will turn your random password predictable.  For"
+    echo "       example, throwing away nine passwords from ten only because"
+    echo "       they are too hard to remember, then only 10% of all possible"
+    echo "       passwords will be use.  An attacker may speed up ten times"
+    echo "       on guessing it by knowing that."
+    echo -e " -- Easy passwords aren't strong, strong passwords aren't easy. --\n"
+}
+
+function helpPageCT() {
     echo -e "\n*** 轉輪式隨機密碼產生器 ***\n"
     echo '請用 "'$0' [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]"'
     echo "    l:  小寫字母     u:  大寫字母"
@@ -33,8 +67,16 @@ function helpPage() {
 }
 
 function errMsg() {
+  case $LANG in
+  zh_TW*)
     echo -e '\n請用 "'$0' [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]"'
     echo -e '\n　或輸入 "'$0' -h|--help" 取得說明\n'
+    ;;
+  *)
+    echo -e '\nUse "'$0' [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"'
+    echo -e '\n   or "'$0' -h|--help" for help.\n'
+    ;;
+  esac
 }
 
                 ##########################
