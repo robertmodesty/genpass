@@ -12,9 +12,23 @@ Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
 color=""
 lnth=8
 
-slowDown='Slow down, please!'
+case $LANG in
+  zh_TW*)
+    slowDown='請減慢速度！'
+    ;;
+  *)  
+    slowDown='Slow down, please!'
+    ;;
+esac
 
 function helpPage() {
+    case $LANG in
+      zh_TW*) helpPageCT ;;
+      *) helpPageEng ;;
+    esac
+}
+
+function helpPageEng() {
     echo -e "\n*** Rotary Random Password Generator ***\n"
     echo 'Use "'$0' [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"'
     echo "    l:  lowercase   u:  uppercase"
@@ -34,9 +48,35 @@ function helpPage() {
     echo -e " -- Easy passwords aren't strong, strong passwords aren't easy. --\n"
 }
 
+function helpPageCT() {
+    echo -e "\n*** 轉輪式隨機密碼產生器 ***\n"
+    echo '請用 "'$0' [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]"'
+    echo "    l:  小寫字母     u:  大寫字母"
+    echo "    n:  數字　　     s:  其他符號    ( 預設值： luns )"
+    echo "    -e:  簡易模式，使用 'lsunln' 作為候選符號的組合方式"
+    echo "    -a:  自動產生密碼，以 /dev/random 作為隨機來源 ( 不建議使用！ )"
+    echo "    -c/n:  彩色輸出 / 不使用彩色 ( 預設值： n )"
+    echo "    -s:  將接下來的字串作為候選符號"
+    echo -e "\n每按一次 '[Enter]' 產生一個隨機符號。\n"
+    echo "註：準備好以後，執行本程式並取得密碼。＊不要＊為了不重要的理由，就重新"
+    echo "　　再取一次密碼。過度篩選密碼會使得密碼變得可以預測。例如，如果每十個"
+    echo "　　密碼裡，有九個因為太難記住而廢棄，那麼所有可能的密碼組合中，只有十"
+    echo "　　分之一可能真正使用。瞭解這一點的攻擊者，在猜密碼的時候速度可以加快"
+    echo "　　為十倍。"
+    echo -e "　－－好記的密碼不好用，好用的密碼不好記－－\n"
+}
+
 function errMsg() {
+  case $LANG in
+  zh_TW*)
+    echo -e '\n請用 "'$0' [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]"'
+    echo -e '\n　或輸入 "'$0' -h|--help" 取得說明\n'
+    ;;
+  *)
     echo -e '\nUse "'$0' [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"'
     echo -e '\n   or "'$0' -h|--help" for help.\n'
+    ;;
+  esac
 }
 
                 ##########################
