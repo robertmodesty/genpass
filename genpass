@@ -9,8 +9,8 @@ Lcase='abcdefghijklmnopqrstuvwxyz'
 Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 Nums='0123456789'
 Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
-color="1"
-lnth=12
+color=""
+lnth=8
 
 
 
@@ -21,7 +21,7 @@ function helpPage() {
     echo "    n:  numbers     s:  other symbol    ( default:  luns )"
     echo "    -e:  easy mode, use 'lsunln' as the composition of the candidates"
     echo "    -a:  auto generate from /dev/random ( NOT RECOMMENDED! )"
-    echo "    -c/n:  color / no color ( default: c )"
+    echo "    -c/n:  color / no color ( default: n )"
     echo "    -s:  use the following string as candidates"
     echo -e "\nPress '[Enter]' and generate one random character each time.\n"
     echo "Note:  Prepare yourself, then execute this program and get the password."
@@ -50,6 +50,13 @@ fi
 ##########################
 #    read parameters     #
 ##########################
+if [ "$1" == "engine" ] ; then
+  Eng="1"
+  color="1"
+  lnth=12
+  shift
+fi
+
 chrCmp=""
 rotor=""
 while [ "$1" != "" ] ; do
