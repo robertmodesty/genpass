@@ -13,12 +13,13 @@ color="1"
 lnth=12
 
 
+
 function helpPage() {
     echo -e "\n*** Rotary Random Password Generator ***\n"
-    echo 'Use "'$0' [-a] [-c|-n] [length of password] [l][u][r][n][s] [-s ...]"'
-    echo "    l:  lowercase   u:  uppercase   r:  random-case"
+    echo 'Use "'$0' [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"'
+    echo "    l:  lowercase   u:  uppercase"
     echo "    n:  numbers     s:  other symbol    ( default:  luns )"
-    echo "    -e:  easy mode, use 'lnursrn' as the composition of the candidates"
+    echo "    -e:  easy mode, use 'lsunln' as the composition of the candidates"
     echo "    -a:  auto generate from /dev/random ( NOT RECOMMENDED! )"
     echo "    -c/n:  color / no color ( default: c )"
     echo "    -s:  use the following string as candidates"
@@ -34,7 +35,7 @@ function helpPage() {
 }
 
 function errMsg() {
-    echo -e '\nUse "'$0' [-a] [-c|-n] [length of password] [l][u][r][n][s] [-s ...]"'
+    echo -e '\nUse "'$0' [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"'
     echo -e '\n   or "'$0' -h|--help" for help.\n'
 }
 
@@ -63,7 +64,7 @@ while [ "$1" != "" ] ; do
 
   #### get composition of candidates ####
   arg=$1
-  while [ "$arg" != "${arg%[lurns]}" ] ; do arg="${arg%[lurns]}" ; done
+  while [ "$arg" != "${arg%[luns]}" ] ; do arg="${arg%[luns]}" ; done
   if [ -z "$arg" ] ; then
     chrCmp+=$1
     shift
@@ -117,10 +118,9 @@ done
 #########################################
 #    composing the candidate string     #
 #########################################
-if [ -n "$ezmod" ] ; then chrCmp+="lnursrn" ; fi
+if [ -n "$ezmod" ] ; then chrCmp+="lsunln" ; fi
 if [ -z "$chrCmp" ] && [ -z "$rotor" ] ; then chrCmp="luns" ; fi
 
-declare -i trn=0 R=0
 for ((n=0; n<${#chrCmp}; n++)) ; do
   case "${chrCmp:$n:1}" in
   "l")
@@ -128,19 +128,6 @@ for ((n=0; n<${#chrCmp}; n++)) ; do
     ;;
   "u")
     rotor+="$Ucase"
-    ;;
-  "r")
-    if [ "$trn" == "0" ] ; then
-      trn=14
-      R=$RANDOM
-    fi
-    if [ $(($R % 2)) == 0 ] ; then
-      rotor+="$Lcase"
-    else
-      rotor+="$Ucase"
-    fi
-    R=R/2
-    trn=trn-1
     ;;
   "n")
     rotor+="$Nums"
