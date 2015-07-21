@@ -12,7 +12,7 @@ Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
 color=""
 lnth=8
 
-
+slowDown='Slow down, please!'
 
 function helpPage() {
     echo -e "\n*** Rotary Random Password Generator ***\n"
@@ -159,10 +159,16 @@ if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
         wndow=(wndow+1)%wndoBndry
     done
     read
-    echo -ne '\E[1A'"$wndow / $rotrSiz = $(($wndow/$rotrSiz))"'\E[K'
+    if [ -n "$Eng" ]  ; then
+      echo -e '\E[1A'"Pressing $(($cnt + 1)):  $(($wndow/$rotrSiz)) rounds"'\E[K'
+    else
+      echo -ne '\E[1A\E[K'
+      [ $wndow -lt 7000 ] && echo -n "$slowDown" 
+    fi
     wndow=wndow%rotrSiz
     rndPaswd+="${rotor:$wndow:1}"
   done
+  echo -ne '\n\E[1A\E[K'
 
 else      ############### Auto mode, from /dev/random
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
@@ -187,7 +193,9 @@ else      ############### Auto mode, from /dev/random
 fi
 
 
-####  add color code into password
+#############################
+#    Output the password    #
+#############################
 if [ -n "$color" ] ; then
   rndPaswd="$(echo " $rndPaswd" | sed 's/\\/\\\\/g ;
                    s/\([a-z][a-z]*\)/ \1 /g ;
@@ -197,22 +205,4 @@ if [ -n "$color" ] ; then
                    s/ /\\E[30m/g ; s/^/\\E[47m/ ; s/$/\\E[0m/')"
 fi
 
-#############################
-#    Output the password    #
-#############################
-if [ -n "$auto" ] ; then
-  if [ -z "$color" ] ; then
-    echo "$rndPaswd"
-  else
-    echo -e "$rndPaswd"
-  fi
-else
-  echo -ne "\n\E[F"
-  if [ -z "$color" ] ; then
-    echo -n "$rndPaswd"
-    echo -e "\E[K"
-  else
-    echo -e "$rndPaswd\E[K"
-  fi
-fi
-
+echo -e "$rndPaswd"
