@@ -1,6 +1,6 @@
 #!/bin/bash
 #################################################################
-#   Rotary Random Password Generator                            #
+#   Rotary Random Password Generator (Enginner varsion)         #
 #                     By Robert D. Wei (Freedman) 2014 June     #
 #                                               License: GPL 2  #
 #################################################################
@@ -50,6 +50,13 @@ fi
 ##########################
 #    read parameters     #
 ##########################
+if [ "$1" == "engine" ] ; then
+  Eng="1"
+  color="1"
+  lnth=12
+  shift
+fi
+
 chrCmp=""
 rotor=""
 while [ "$1" != "" ] ; do
@@ -152,11 +159,16 @@ if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
         wndow=(wndow+1)%wndoBndry
     done
     read
-    echo -ne '\E[1A\E[K'
-    if [ $wndow -lt 7000 ] ; then echo -n "$slowDown" ; fi
+    if [ -n "$Eng" ]  ; then
+      echo -e '\E[1A'"Pressing $(($cnt + 1)):  $(($wndow/$rotrSiz)) rounds"'\E[K'
+    else
+      echo -ne '\E[1A\E[K'
+      [ $wndow -lt 7000 ] && echo -n "$slowDown" 
+    fi
     wndow=wndow%rotrSiz
     rndPaswd+="${rotor:$wndow:1}"
   done
+  echo -ne '\n\E[1A\E[K'
 
 else      ############### Auto mode, from /dev/random
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
@@ -180,6 +192,7 @@ else      ############### Auto mode, from /dev/random
   done
 fi
 
+
 #############################
 #    Output the password    #
 #############################
@@ -190,13 +203,6 @@ if [ -n "$color" ] ; then
                    s/ \([a-z][a-z]*\)/\\E[34m\1/g ;
                    s/ \([A-Z][A-Z]*\)/\\E[31m\1/g ;
                    s/ /\\E[30m/g ; s/^/\\E[47m/ ; s/$/\\E[0m/')"
-  echo -e "$rndPaswd"
-else
-  if [ -z "$auto" ] ; then
-    echo -n "$rndPaswd"
-    echo -e "\E[K"
-  else
-    echo "$rndPaswd"
-  fi
 fi
 
+echo -e "$rndPaswd"
