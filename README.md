@@ -1,38 +1,38 @@
-*** 轉輪式隨機密碼產生器 ***
+*** Rotary Random Password Generator ***
 
-　這是用 BASH 腳本語言寫的真隨機密碼產生器。你可以用它來產生適合各種場合的密碼，例如電腦登入、銀行提款卡、無線 Wifi 安全等等。
+  This is a real random password generator wrote in BASH script.  You can use it to generate passwords applicable to many kinds of place, such as computer login, bank debit card, WiFi security, etc. 
 
-　密碼字元的產生是用類似旋轉輪盤的方式，並且在按下 [Enter] 按鍵時瞬間暫停輪盤。這能使密碼難以預測。密碼的長度、使用哪些候選符號都能經由參數設定。
+  It generate characters for password like rolling a rotor and pause it suddenly by pressing [Enter] key.  This make the password unpredictable.  The length of password, what characters as candidates, can be specified by arguments.
 
-　在「Auto」模式當中，產生器並不會去『轉輪盤』，而是用 /dev/random 當作隨機來源。在某些作業系統中，這樣會使密碼變得可以預測。使用這個模式可能不是好主意。
+  IN the 'Auto' mode, the generator does not "roll the rotor", but use the /dev/random as random pool instead.  In some OS, this may cause the password predictable.  It may not be a good idea using this mode.
 
-　使用本程式時先準備好，接著執行本程式並取得密碼。＊不要＊為了不重要的理由，就重新再取一次密碼。過度篩選密碼會使得密碼變得可以預測。例如，如果每十個密碼裡，有九個因為太難記住而廢棄，那麼所有可能的密碼組合中，只有十分之一可能真正使用。瞭解這一點的攻擊者，在猜密碼的時候速度可以加快為十倍。
+  To use this, just get prepared, then execute this program and get the password.  DO NOT re-generate a password for some unimportant reasons. Over filtering will turn your random password predictable.  For example, throwing away nine passwords from ten only because they are too hard to remember, then only 10% of all possible passwords will be use.  An attacker may speed up ten times on guessing it by knowing that.
 
-　－－好記的密碼不好用，好用的密碼不好記－－
+ -- Easy passwords aren't strong, strong passwords aren't easy. --
 
-SYNOPSIS(總覽)
+SYNOPSIS
 
-        genpass [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]
+        genpass [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]
 
-ARGUMENTS(參數)
+ARGUMENTS
 
-        l   小寫字母
-        u   大寫字母
-        n   數字
-        s   其他符號
+        l   lowercase   
+        u   uppercase
+        n   numbers
+        s   other symbol
 
         -e
-          簡易模式，使用 'lsunln' 作為候選符號的組合方式
+          easy mode, use 'lsunln' as the composition of the candidates
 
         -a
-          自動產生密碼，以 /dev/random 作為隨機來源（不建議使用！）
+          auto generate from /dev/random ( NOT RECOMMENDED! )
 
         -c
-          使用各種色彩顯示密碼
+          show password in different colors
 
         -n
-          不使用色彩顯示密碼
+          show password uncolored
 
         -s
-          將接下來的字串作為候選符號
+          use the following string as candidates
 
