@@ -189,6 +189,7 @@ done
 #    generate password     #
 ############################
 declare -i rotrSiz=${#rotor} wndow=0
+minStep=$(( $rotrSiz * 100 ))
 rndPaswd=""
 
 if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
@@ -203,7 +204,7 @@ if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
       echo -e '\E[1A'"Pressing $(($cnt + 1)):  $(($wndow/$rotrSiz)) rounds"'\E[K'
     else
       echo -ne '\E[1A\E[K'
-      [ $wndow -lt 7000 ] && echo -n "$slowDown" 
+      [ $wndow -lt $minStep ] && echo -n "$slowDown" 
     fi
     wndow=wndow%rotrSiz
     rndPaswd+="${rotor:$wndow:1}"
