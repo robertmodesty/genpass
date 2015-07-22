@@ -15,9 +15,13 @@ lnth=8
 case $LANG in
   zh_TW*)
     slowDown='請減慢速度！'
+    Char='字元'
+    Rnd='轉'
     ;;
-  *)  
+  *)
     slowDown='Slow down, please!'
+    Char='Character'
+    Rnd='Rounds'
     ;;
 esac
 
@@ -194,7 +198,7 @@ if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
     done
     read
     if [ -n "$Eng" ]  ; then
-      echo -e '\E[1A'"Pressing $(($cnt + 1)):  $(($wndow/$rotrSiz)) rounds"'\E[K'
+      echo -e "\\E[1A$Char $(($cnt + 1)):  $(($wndow/$rotrSiz)) $Rnd"
     else
       echo -ne '\E[1A\E[K'
       [ $wndow -lt $minStep ] && echo -n "$slowDown" 
