@@ -243,6 +243,22 @@ function autoGenerate() {
 }
 
 
+function outputPasswd() {
+
+  if [ -n "$color" ] ; then
+    rndPaswd="$(echo " $rndPaswd" | sed 's/\\/\\\\/g ;
+                     s/\([a-z][a-z]*\)/ \1 /g ;
+                     s/\([A-Z][A-Z]*\)/ \1 /g ; s/  / /g ; s/ $// ;
+                     s/ \([a-z][a-z]*\)/\\E[34m\1/g ;
+                     s/ \([A-Z][A-Z]*\)/\\E[31m\1/g ;
+                     s/ /\\E[30m/g ; s/^/\\E[47m/ ; s/$/\\E[0m/')"
+  fi
+
+  echo -e "$rndPaswd"
+
+}
+
+
                 ##########################
 #################     Program start      #######################
                 ##########################
@@ -253,16 +269,5 @@ setCandidate
 
 generatePasswd
 
-#############################
-#    Output the password    #
-#############################
-if [ -n "$color" ] ; then
-  rndPaswd="$(echo " $rndPaswd" | sed 's/\\/\\\\/g ;
-                   s/\([a-z][a-z]*\)/ \1 /g ;
-                   s/\([A-Z][A-Z]*\)/ \1 /g ; s/  / /g ; s/ $// ;
-                   s/ \([a-z][a-z]*\)/\\E[34m\1/g ;
-                   s/ \([A-Z][A-Z]*\)/\\E[31m\1/g ;
-                   s/ /\\E[30m/g ; s/^/\\E[47m/ ; s/$/\\E[0m/')"
-fi
+outputPasswd
 
-echo -e "$rndPaswd"
