@@ -160,34 +160,34 @@ function analysisArgs() {
   done
 
 }
+
+
+function setCandidate() {
+
+  #########################################
+  #    composing the candidate string     #
+  #########################################
+  if [ -n "$ezmod" ] ; then chrCmp+="lsunln" ; fi
+  if [ -z "$chrCmp" ] && [ -z "$rotor" ] ; then chrCmp="luns" ; fi
+
+  for ((n=0; n<${#chrCmp}; n++)) ; do
+    case "${chrCmp:$n:1}" in
+      "l")  rotor+="$Lcase"  ;;
+      "u")  rotor+="$Ucase"  ;;
+      "n")  rotor+="$Nums"   ;;
+      "s")  rotor+="$Symbs"  ;;
+    esac
+  done
+}
+
+
                 ##########################
 #################     Program start      #######################
                 ##########################
 
 analysisArgs $@
 
-#########################################
-#    composing the candidate string     #
-#########################################
-if [ -n "$ezmod" ] ; then chrCmp+="lsunln" ; fi
-if [ -z "$chrCmp" ] && [ -z "$rotor" ] ; then chrCmp="luns" ; fi
-
-for ((n=0; n<${#chrCmp}; n++)) ; do
-  case "${chrCmp:$n:1}" in
-  "l")
-    rotor+="$Lcase"
-    ;;
-  "u")
-    rotor+="$Ucase"
-    ;;
-  "n")
-    rotor+="$Nums"
-    ;;
-  "s")
-    rotor+="$Symbs"
-    ;;
-  esac
-done
+setCandidate
 
 ############################
 #    generate password     #
