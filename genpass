@@ -84,80 +84,87 @@ function errOut() {
   exit $1
 }
 
+
+function analysisArgs() {
+  
+  if [ "$#" == "1" ] && [ "$1" == "-h" ] || [ "$1" == "--help" ] ; then
+    helpPage
+    exit 0
+  fi 
+  
+  ##########################
+  #    read parameters     #
+  ##########################
+  if [ "$1" == "engine" ] ; then
+    Eng="1"
+    color="1"
+    lnth=12
+    shift
+  fi
+  
+  chrCmp=""
+  rotor=""
+  while [ "$1" != "" ] ; do
+    #### get length ####
+    arg=$1
+    while [ "$arg" != "${arg%[0-9]}" ] ; do arg="${arg%[0-9]}" ; done
+    if [ "$arg" == "" ] ; then
+      lnth=$1
+      shift
+      continue
+    fi
+  
+    #### get composition of candidates ####
+    arg=$1
+    while [ "$arg" != "${arg%[luns]}" ] ; do arg="${arg%[luns]}" ; done
+    if [ -z "$arg" ] ; then
+      chrCmp+=$1
+      shift
+      continue
+    fi
+  
+    #### get candidate character string ####
+    if [ "$1" == "-s" ] ; then
+      if [ -z "$2" ] ; then
+        errOut 1
+      else
+        rotor+="$2"
+        shift
+      fi
+    #### other parameters ####
+    elif [ "${1:0:1}" = "-" ] && [ ${#1} -gt 1 ] ; then
+      for ((cnt=1; cnt<${#1}; cnt++)) ; do
+        case "${1:$cnt:1}" in
+          "e")
+            ezmod="1"
+            ;;
+          "a")
+            auto="1"
+            ;;
+          "c")
+            color="1"
+            ;;
+          "n")
+            color=""
+            ;;
+          *)
+            errOut 1
+            ;; 
+        esac
+      done
+    else
+      errOut 1
+    fi
+  
+    shift
+  done
+
+}
                 ##########################
 #################     Program start      #######################
                 ##########################
-if [ "$#" == "1" ] && [ "$1" == "-h" ] || [ "$1" == "--help" ] ; then
-  helpPage
-  exit 0
-fi 
 
-##########################
-#    read parameters     #
-##########################
-if [ "$1" == "engine" ] ; then
-  Eng="1"
-  color="1"
-  lnth=12
-  shift
-fi
-
-chrCmp=""
-rotor=""
-while [ "$1" != "" ] ; do
-  #### get length ####
-  arg=$1
-  while [ "$arg" != "${arg%[0-9]}" ] ; do arg="${arg%[0-9]}" ; done
-  if [ "$arg" == "" ] ; then
-    lnth=$1
-    shift
-    continue
-  fi
-
-  #### get composition of candidates ####
-  arg=$1
-  while [ "$arg" != "${arg%[luns]}" ] ; do arg="${arg%[luns]}" ; done
-  if [ -z "$arg" ] ; then
-    chrCmp+=$1
-    shift
-    continue
-  fi
-
-  #### get candidate character string ####
-  if [ "$1" == "-s" ] ; then
-    if [ -z "$2" ] ; then
-      errOut 1
-    else
-      rotor+="$2"
-      shift
-    fi
-  #### other parameters ####
-  elif [ "${1:0:1}" = "-" ] && [ ${#1} -gt 1 ] ; then
-    for ((cnt=1; cnt<${#1}; cnt++)) ; do
-      case "${1:$cnt:1}" in
-        "e")
-          ezmod="1"
-          ;;
-        "a")
-          auto="1"
-          ;;
-        "c")
-          color="1"
-          ;;
-        "n")
-          color=""
-          ;;
-        *)
-          errOut 1
-          ;; 
-      esac
-    done
-  else
-    errOut 1
-  fi
-
-  shift
-done
+analysisArgs $@
 
 #########################################
 #    composing the candidate string     #
