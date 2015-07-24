@@ -181,23 +181,21 @@ function setCandidate() {
 }
 
 
-                ##########################
-#################     Program start      #######################
-                ##########################
+function generatePasswd() {
 
-analysisArgs $@
+  if [ -z "$auto" ] ; then
+    manualGenerate
+  else
+    autoGenerate
+  fi
+}
 
-setCandidate
+function manualGenerate() {
 
-############################
-#    generate password     #
-############################
-declare -i rotrSiz=${#rotor} wndow=0
-minStep=$(( $rotrSiz * 100 ))
-rndPaswd=""
-
-if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
+  declare -i rotrSiz=${#rotor} wndow=0
   declare -i wndoBndry=$SysMax-$SysMax%$rotrSiz
+  minStep=$(( $rotrSiz * 100 ))
+  rndPaswd=""
 
   for ((cnt=0; cnt<$lnth; cnt++)) ; do
     until read -t 0 ; do
@@ -215,8 +213,15 @@ if [ -z "$auto" ] ; then    ### by pressing [Enter] key.
   done
   echo -ne '\n\E[1A\E[K'
 
-else      ############### Auto mode, from /dev/random
+}
+
+function autoGenerate() {
+
+  declare -i rotrSiz=${#rotor} wndow=0
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
+  minStep=$(( $rotrSiz * 100 ))
+  rndPaswd=""
+
   while [ $unitBndry -lt $rotrSiz ] ; do
     unitBits=unitBits+1
     unitBndry=unitBndry*2
@@ -235,8 +240,18 @@ else      ############### Auto mode, from /dev/random
     done
     rndPaswd+="${rotor:$wndow:1}"
   done
-fi
+}
 
+
+                ##########################
+#################     Program start      #######################
+                ##########################
+
+analysisArgs $@
+
+setCandidate
+
+generatePasswd
 
 #############################
 #    Output the password    #
