@@ -249,15 +249,17 @@ function outputPasswd() {
 }
 
 
-                ##########################
-#################     Program start      #######################
-                ##########################
+function main() {
 
-analysisArgs $@
+  analysisArgs $@
 
-setCandidate
+  setCandidate
 
-generatePasswd
+  generatePasswd
 
-outputPasswd
+  outputPasswd
+}
+
+
+main
 
