@@ -18,14 +18,14 @@ BOARD_chrCmp=""
   
 case $LANG in
   zh_TW*)
-    slowDown='請減慢速度！'
-    Char='字元'
-    Rnd='轉'
+    readonly slowDown='請減慢速度！'
+    readonly Char='字元'
+    readonly Rnd='轉'
     ;;
   *)
-    slowDown='Slow down, please!'
-    Char='Character'
-    Rnd='Rounds'
+    readonly slowDown='Slow down, please!'
+    readonly Char='Character'
+    readonly Rnd='Rounds'
     ;;
 esac
 
