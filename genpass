@@ -4,11 +4,11 @@
 #                     By Robert D. Wei (Freedman) 2015 July     #
 #                                               License: GPL 2  #
 #################################################################
-SysMax=2147483647
-Lcase='abcdefghijklmnopqrstuvwxyz'
-Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-Nums='0123456789'
-Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+readonly SysMax=2147483647
+readonly Lcase='abcdefghijklmnopqrstuvwxyz'
+readonly Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+readonly Nums='0123456789'
+readonly Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
 BOARD_color=""
 BOARD_lnth=8
 BOARD_candidStr=""
