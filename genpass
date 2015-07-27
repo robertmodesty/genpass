@@ -251,7 +251,7 @@ function outputPasswd() {
 
 function main() {
 
-  analysisArgs $@
+  analysisArgs "$@"
 
   setCandidate
 
@@ -261,5 +261,5 @@ function main() {
 }
 
 
-main
+main "$@"
 
