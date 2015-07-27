@@ -11,6 +11,8 @@ Nums='0123456789'
 Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
 color=""
 lnth=8
+BOARD_candidStr=""
+
 
 case $LANG in
   zh_TW*)
@@ -102,7 +104,6 @@ function analysisArgs() {
   
   ### regular arguments ###
   chrCmp=""
-  rotor=""
   
   while [ "$1" != "" ] ; do
   
@@ -126,7 +127,7 @@ function analysisArgs() {
   
     #### is candidate character string ####
     if [ "$1" == "-s" ] && [ -n "$2" ] ; then
-      rotor+="$2"
+      BOARD_candidStr+="$2"
       shift 2
       continue
     fi
@@ -152,11 +153,9 @@ function analysisArgs() {
 }
 
 
-function setCandidate() {
-
-  #########################################
-  #    composing the candidate string     #
-  #########################################
+function candidateChars() {
+  local rotor="$BOARD_candidStr"
+  
   if [ -n "$ezmod" ] ; then chrCmp+="lsunln" ; fi
   if [ -z "$chrCmp" ] && [ -z "$rotor" ] ; then chrCmp="luns" ; fi
 
@@ -168,19 +167,22 @@ function setCandidate() {
       "s")  rotor+="$Symbs"  ;;
     esac
   done
+
+  echo "$rotor"
 }
 
 
 function generatePasswd() {
 
   if [ -z "$auto" ] ; then
-    manualGenerate
+    manualGenerate "$@"
   else
-    autoGenerate
+    autoGenerate "$@"
   fi
 }
 
 function manualGenerate() {
+  local rotor="$1"
 
   declare -i rotrSiz=${#rotor} wndow=0
   declare -i wndoBndry=$SysMax-$SysMax%$rotrSiz
@@ -206,6 +208,7 @@ function manualGenerate() {
 }
 
 function autoGenerate() {
+  local rotor="$1"
 
   declare -i rotrSiz=${#rotor} wndow=0
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
@@ -250,12 +253,13 @@ function outputPasswd() {
 
 
 function main() {
+  local rotor
 
   analysisArgs "$@"
 
-  setCandidate
+  rotor="$( candidateChars )"
 
-  generatePasswd
+  generatePasswd "$rotor"
 
   outputPasswd
 }
