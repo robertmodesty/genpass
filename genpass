@@ -9,8 +9,8 @@ Lcase='abcdefghijklmnopqrstuvwxyz'
 Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 Nums='0123456789'
 Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
-color=""
-lnth=8
+BOARD_color=""
+BOARD_lnth=8
 BOARD_candidStr=""
 BOARD_ezmod=""
 BOARD_auto=""
@@ -99,8 +99,8 @@ function analysisArgs() {
   
   if [ "$1" == "engine" ] ; then
     Eng="1"
-    color="1"
-    lnth=12
+    BOARD_color="1"
+    BOARD_lnth=12
     shift
   fi
   
@@ -111,7 +111,7 @@ function analysisArgs() {
     arg=$1
     while [ "$arg" != "${arg#[0-9]}" ] ; do arg="${arg#[0-9]}" ; done
     if [ "$arg" == "" ] ; then
-      lnth=$1
+      BOARD_lnth="$1"
       shift
       continue
     fi
@@ -138,8 +138,8 @@ function analysisArgs() {
         case "${1:$cnt:1}" in
           "e")  BOARD_ezmod="1"  ;;
           "a")  BOARD_auto="1"   ;;
-          "c")  color="1"  ;;
-          "n")  color=""   ;;
+          "c")  BOARD_color="1"  ;;
+          "n")  BOARD_color=""   ;;
           *)    errOut 1   ;; 
         esac
       done
@@ -194,7 +194,7 @@ function manualGenerate() {
   minStep=$(( $rotrSiz * 100 ))
   rndPaswd=""
 
-  for ((cnt=0; cnt<$lnth; cnt++)) ; do
+  for ((cnt=0; cnt<$BOARD_lnth; cnt++)) ; do
     until read -t 0 ; do
         wndow=(wndow+1)%wndoBndry
     done
@@ -225,7 +225,7 @@ function autoGenerate() {
     unitBndry=unitBndry*2
   done
 
-  for ((cnt=0; cnt<$lnth; cnt++)) ; do
+  for ((cnt=0; cnt<$BOARD_lnth; cnt++)) ; do
     wndow=rotrSiz
     until [ $wndow -lt $rotrSiz ] ; do
       while [ $rndBits -lt $unitBits ] ; do
@@ -243,7 +243,7 @@ function autoGenerate() {
 
 function outputPasswd() {
 
-  if [ -n "$color" ] ; then
+  if [ -n "$BOARD_color" ] ; then
     rndPaswd="$(echo " $rndPaswd" | sed 's/\\/\\\\/g ;
                      s/\([a-z][a-z]*\)/ \1 /g ;
                      s/\([A-Z][A-Z]*\)/ \1 /g ; s/  / /g ; s/ $// ;
