@@ -12,8 +12,10 @@ Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
 color=""
 lnth=8
 BOARD_candidStr=""
-
-
+BOARD_ezmod=""
+BOARD_auto=""
+BOARD_chrCmp=""
+  
 case $LANG in
   zh_TW*)
     slowDown='請減慢速度！'
@@ -103,8 +105,6 @@ function analysisArgs() {
   fi
   
   ### regular arguments ###
-  chrCmp=""
-  
   while [ "$1" != "" ] ; do
   
     #### is length ####
@@ -120,7 +120,7 @@ function analysisArgs() {
     arg=$1
     while [ "$arg" != "${arg#[luns]}" ] ; do arg="${arg#[luns]}" ; done
     if [ -z "$arg" ] ; then
-      chrCmp+=$1
+      BOARD_chrCmp+=$1
       shift
       continue
     fi
@@ -136,8 +136,8 @@ function analysisArgs() {
     if [ "${1:0:1}" = "-" ] && [ ${#1} -gt 1 ] ; then
       for ((cnt=1; cnt<${#1}; cnt++)) ; do
         case "${1:$cnt:1}" in
-          "e")  ezmod="1"  ;;
-          "a")  auto="1"   ;;
+          "e")  BOARD_ezmod="1"  ;;
+          "a")  BOARD_auto="1"   ;;
           "c")  color="1"  ;;
           "n")  color=""   ;;
           *)    errOut 1   ;; 
@@ -156,25 +156,30 @@ function analysisArgs() {
 function candidateChars() {
   local rotor="$BOARD_candidStr"
   
-  if [ -n "$ezmod" ] ; then chrCmp+="lsunln" ; fi
-  if [ -z "$chrCmp" ] && [ -z "$rotor" ] ; then chrCmp="luns" ; fi
+  if [ -n "$BOARD_ezmod" ] ; then
+    BOARD_chrCmp+="lsunln"
+  fi
+  
+  if [ -z "$BOARD_chrCmp" ] && [ -z "$rotor" ] ; then
+    BOARD_chrCmp="luns"
+  fi
 
-  for ((n=0; n<${#chrCmp}; n++)) ; do
-    case "${chrCmp:$n:1}" in
+  for ((n=0; n<${#BOARD_chrCmp}; n++)) ; do
+    case "${BOARD_chrCmp:$n:1}" in
       "l")  rotor+="$Lcase"  ;;
       "u")  rotor+="$Ucase"  ;;
       "n")  rotor+="$Nums"   ;;
       "s")  rotor+="$Symbs"  ;;
     esac
   done
-
+  
   echo "$rotor"
 }
 
 
 function generatePasswd() {
 
-  if [ -z "$auto" ] ; then
+  if [ -z "$BOARD_auto" ] ; then
     manualGenerate "$@"
   else
     autoGenerate "$@"
