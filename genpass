@@ -9,6 +9,7 @@ readonly Lcase='abcdefghijklmnopqrstuvwxyz'
 readonly Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 readonly Nums='0123456789'
 readonly Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+readonly ThisTTY="$( tty )"
 BOARD_color=""
 BOARD_lnth=8
 BOARD_candidStr=""
@@ -16,7 +17,6 @@ BOARD_ezmod=""
 BOARD_auto=""
 BOARD_chrCmp=""
 BOARD_engine=""
-BOARD_rndPaswd=""
   
 case $LANG in
   zh_TW*)
@@ -190,10 +190,11 @@ function generatePasswd() {
 }
 
 function manualGenerate() {
-  local rotor="$1" cnt
+  local rotor="$1"
   declare -i rotrSiz=${#rotor} wndow=0
   declare -i wndoBndry=${SysMax}-${SysMax}%rotrSiz
   local minStep=$(( $rotrSiz * 100 ))
+  local cnt rndPaswd
 
   for ((cnt=0; cnt<$BOARD_lnth; cnt++)) ; do
     until read -t 0 ; do
@@ -201,23 +202,24 @@ function manualGenerate() {
     done
     read
     if [ -n "$BOARD_engine" ]  ; then
-      echo -e "\\E[1A$Char $(($cnt + 1)):  $(($wndow/$rotrSiz)) $Rnd"
+      echo -e "\E[1A$Char $(($cnt+1)):  $(($wndow/$rotrSiz)) $Rnd" > $ThisTTY
     else
-      echo -ne '\E[1A\E[K'
+      echo -ne '\E[1A\E[K' > $ThisTTY
       [ $wndow -lt $minStep ] && echo -n "$slowDown" 
     fi
     wndow=wndow%rotrSiz
-    BOARD_rndPaswd+="${rotor:$wndow:1}"
+    rndPaswd+="${rotor:$wndow:1}"
   done
-  echo -ne '\n\E[1A\E[K'
-
+  echo -ne '\n\E[1A\E[K' > $ThisTTY
+  echo "$rndPaswd"
 }
 
 function autoGenerate() {
-  local rotor="$1" cnt
+  local rotor="$1"
   declare -i rotrSiz=${#rotor} wndow=0
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
   local minStep=$(( $rotrSiz * 100 ))
+  local cnt rndPaswd
 
   while [ $unitBndry -lt $rotrSiz ] ; do
     unitBits=unitBits+1
@@ -235,13 +237,14 @@ function autoGenerate() {
       rndDat=rndDat/unitBndry
       rndBits=rndBits-unitBits
     done
-    BOARD_rndPaswd+="${rotor:$wndow:1}"
+    rndPaswd+="${rotor:$wndow:1}"
   done
+  echo "$rndPaswd"
 }
 
 
 function outputPasswd() {
-  local rndPaswd="$BOARD_rndPaswd"
+  local rndPaswd="$1"
 
   if [ -n "$BOARD_color" ] ; then
     rndPaswd="$(echo " $rndPaswd" | sed 's/\\/\\\\/g ;
@@ -258,15 +261,15 @@ function outputPasswd() {
 
 
 function main() {
-  local rotor
+  local rotor rndPaswd
 
   analysisArgs "$@"
 
   rotor="$( candidateChars )"
 
-  generatePasswd "$rotor"
+  rndPaswd="$( generatePasswd "$rotor" )"
 
-  outputPasswd
+  outputPasswd "$rndPaswd"
 }
 
 
