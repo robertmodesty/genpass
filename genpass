@@ -92,7 +92,8 @@ function errOut() {
 
 
 function analysisArgs() {
-  
+  local arg cnt
+
   ### Special arguments ###
   if [ "$#" == "1" ] && [ "$1" == "-h" ] || [ "$1" == "--help" ] ; then
     helpPage
@@ -189,11 +190,10 @@ function generatePasswd() {
 }
 
 function manualGenerate() {
-  local rotor="$1"
-
+  local rotor="$1" cnt
   declare -i rotrSiz=${#rotor} wndow=0
-  declare -i wndoBndry=$SysMax-$SysMax%$rotrSiz
-  minStep=$(( $rotrSiz * 100 ))
+  declare -i wndoBndry=${SysMax}-${SysMax}%rotrSiz
+  local minStep=$(( $rotrSiz * 100 ))
 
   for ((cnt=0; cnt<$BOARD_lnth; cnt++)) ; do
     until read -t 0 ; do
@@ -214,11 +214,10 @@ function manualGenerate() {
 }
 
 function autoGenerate() {
-  local rotor="$1"
-
+  local rotor="$1" cnt
   declare -i rotrSiz=${#rotor} wndow=0
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
-  minStep=$(( $rotrSiz * 100 ))
+  local minStep=$(( $rotrSiz * 100 ))
 
   while [ $unitBndry -lt $rotrSiz ] ; do
     unitBits=unitBits+1
