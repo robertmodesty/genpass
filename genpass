@@ -196,13 +196,13 @@ function manualGenerate() {
   local minStep=$(( $rotrSiz * 100 ))
   local cnt rndPaswd
 
-  for ((cnt=0; cnt<$BOARD_lnth; cnt++)) ; do
+  for ((cnt=1; cnt<=$BOARD_lnth; cnt++)) ; do
     until read -t 0 ; do
         wndow=(wndow+1)%wndoBndry
     done
     read
     if [ -n "$BOARD_engine" ]  ; then
-      echo -e "\E[1A$Char $(($cnt+1)):  $(($wndow/$rotrSiz)) $Rnd" > $ThisTTY
+      echo -e "\E[1A$Char $cnt:  $(($wndow/$rotrSiz)) $Rnd" > $ThisTTY
     else
       echo -ne '\E[1A\E[K' > $ThisTTY
       [ $wndow -lt $minStep ] && echo -n "$slowDown" 
@@ -226,7 +226,7 @@ function autoGenerate() {
     unitBndry=unitBndry*2
   done
 
-  for ((cnt=0; cnt<$BOARD_lnth; cnt++)) ; do
+  for ((cnt=1; cnt<=$BOARD_lnth; cnt++)) ; do
     wndow=rotrSiz
     until [ $wndow -lt $rotrSiz ] ; do
       while [ $rndBits -lt $unitBits ] ; do
@@ -247,16 +247,17 @@ function outputPasswd() {
   local rndPaswd="$1"
 
   if [ -n "$BOARD_color" ] ; then
-    rndPaswd="$(echo " $rndPaswd" | sed 's/\\/\\\\/g ;
-                     s/\([a-z][a-z]*\)/ \1 /g ;
-                     s/\([A-Z][A-Z]*\)/ \1 /g ; s/  / /g ; s/ $// ;
-                     s/ \([a-z][a-z]*\)/\\E[34m\1/g ;
-                     s/ \([A-Z][A-Z]*\)/\\E[31m\1/g ;
-                     s/ /\\E[30m/g ; s/^/\\E[47m/ ; s/$/\\E[0m/')"
+    rndPaswd="$( echo " $rndPaswd" \
+                  | sed 's/\\/\\\\/g ;
+                      s/\([a-z][a-z]*\)/ \1 /g ;
+                      s/\([A-Z][A-Z]*\)/ \1 /g ; s/  / /g ; s/ $// ;
+                      s/ \([a-z][a-z]*\)/\\E[34m\1/g ;
+                      s/ \([A-Z][A-Z]*\)/\\E[31m\1/g ;
+                      s/ /\\E[30m/g ; s/^/\\E[47m/ ; s/$/\\E[0m/' \
+              )"
   fi
 
   echo -e "$rndPaswd"
-
 }
 
 
