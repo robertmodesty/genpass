@@ -5,6 +5,7 @@
 #                                               License: GPL 2  #
 #################################################################
 readonly SysMax=2147483647
+readonly OneMinuteCounts=100000000
 readonly Lcase='abcdefghijklmnopqrstuvwxyz'
 readonly Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 readonly Nums='0123456789'
@@ -30,6 +31,19 @@ case $LANG in
     readonly Rnd='Rounds'
     ;;
 esac
+
+
+function integer_large_enough() {
+  declare -i BigInt=1
+
+  while [ $BigInt -lt $(( BigInt *2 )) ] ; do
+    BigInt=BigInt*2
+  done
+  
+  test $(( $BigInt / $OneMinuteCounts )) -gt 1440
+  return $?
+}
+
 
 function helpPage() {
     case $LANG in
