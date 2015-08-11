@@ -210,11 +210,25 @@ function manualGenerate() {
   local minStep=$(( $rotrSiz * 100 ))
   local cnt rndPaswd
 
+  if integer_large_enough ; then
+    local IntegerLargeEnough=true
+  else
+    local IntegerLargeEnough=false
+  fi
+
   for ((cnt=1; cnt<=$BOARD_lnth; cnt++)) ; do
-    until read -t 0 ; do
-        wndow=(wndow+1)%wndoBndry
-    done
+
+    if $IntegerLargeEnough ; then
+      until read -t 0 ; do
+          wndow=wndow+1
+      done
+    else
+      until read -t 0 ; do
+          wndow=(wndow+1)%wndoBndry
+      done
+    fi
     read
+
     if [ -n "$BOARD_engine" ]  ; then
       echo -e "\E[1A$Char $cnt:  $(($wndow/$rotrSiz)) $Rnd" > $ThisTTY
     else
@@ -223,7 +237,9 @@ function manualGenerate() {
     fi
     wndow=wndow%rotrSiz
     rndPaswd+="${rotor:$wndow:1}"
+
   done
+
   echo -ne '\n\E[1A\E[K' > $ThisTTY
   echo "$rndPaswd"
 }
