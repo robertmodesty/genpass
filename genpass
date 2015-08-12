@@ -21,11 +21,15 @@ BOARD_engine=""
   
 case $LANG in
   zh_TW*)
+    readonly theCandid='候選字元：'
+    readonly showRotrSiz='轉輪大小：'
     readonly slowDown='請減慢速度！'
     readonly Char='字元'
     readonly Rnd='轉'
     ;;
   *)
+    readonly theCandid='All candidate characters are:'
+    readonly showRotrSiz='Rotor size:'
     readonly slowDown='Slow down, please!'
     readonly Char='Character'
     readonly Rnd='Rounds'
@@ -214,6 +218,15 @@ function manualGenerate() {
     local IntegerLargeEnough=true
   else
     local IntegerLargeEnough=false
+  fi
+
+  if [ -n "$BOARD_engine" ]  ; then
+    echo > $ThisTTY
+    echo "$theCandid" > $ThisTTY
+    echo "$rotor" > $ThisTTY
+    echo > $ThisTTY
+    echo "$showRotrSiz  $rotrSiz" > $ThisTTY
+    echo > $ThisTTY
   fi
 
   for ((cnt=1; cnt<=$BOARD_lnth; cnt++)) ; do
