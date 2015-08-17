@@ -1,8 +1,10 @@
 *** Rotary Random Password Generator ***
 
-  This is a real random password generator wrote in BASH script.  You can use it to generate passwords applicable to many kinds of place, such as computer login, bank debit card, WiFi security, etc. 
+  This is a real random password generator wrote in BASH script.  You can use it to generate passwords applicable to many kinds of place, such as computer login, bank debit card, WiFi security, etc.
 
-  It generate characters for password like rolling a rotor and pause it suddenly by pressing [Enter] key.  This make the password unpredictable.  The length of password, what characters as candidates, can be specified by arguments.
+  Why not build this with C language?  The first, C program need to be compiled, so it is not so portable for regular users.  Today we have BASH on many computer systems, users only need to copy the file or even the text and then run it.  Second, shell script executable code is human readable, user can read it without wondering if the target code match the source code.  This is an advantage on programs about security.  Over here a malware can only be the system or the interpreter that can identify this generator.
+
+  This program generates characters for password like rolling a rotor and pause it suddenly by pressing [Enter] key.  This make the password unpredictable.  The length of password, what characters as candidates, can be specified by arguments.
 
   IN the 'Auto' mode, the generator does not "roll the rotor", but use the /dev/random as random pool instead.  In some OS, this may cause the password predictable.  It may not be a good idea using this mode.
 
@@ -16,7 +18,7 @@ SYNOPSIS
 
 ARGUMENTS
 
-        l   lowercase   
+        l   lowercase
         u   uppercase
         n   numbers
         s   other symbol
