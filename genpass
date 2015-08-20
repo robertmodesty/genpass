@@ -21,18 +21,18 @@ BOARD_engine=""
 
 case $LANG in
   zh_TW*)
-    readonly theCandid='候選字元：'
-    readonly showRotrSiz='轉輪大小：'
-    readonly slowDown='請減慢速度！'
-    readonly Char='字元'
-    readonly Rnd='轉'
+    readonly _all_candidate_characters_are='候選字元：'
+    readonly _rotor_size='轉輪大小：'
+    readonly _slow_down_please='請減慢速度！'
+    readonly _character='字元'
+    readonly _rounds='轉'
     ;;
   *)
-    readonly theCandid='All candidate characters are:'
-    readonly showRotrSiz='Rotor size:'
-    readonly slowDown='Slow down, please!'
-    readonly Char='Character'
-    readonly Rnd='Rounds'
+    readonly _all_candidate_characters_are='All candidate characters are:'
+    readonly _rotor_size='Rotor size:'
+    readonly _slow_down_please='Slow down, please!'
+    readonly _character='Character'
+    readonly _rounds='Rounds'
     ;;
 esac
 
@@ -223,10 +223,10 @@ function manualGenerate() {
 
   if [ -n "$BOARD_engine" ]  ; then
     echo > $ThisTTY
-    echo "$theCandid" > $ThisTTY
+    echo "$_all_candidate_characters_are" > $ThisTTY
     echo "$rotor" > $ThisTTY
     echo > $ThisTTY
-    echo "$showRotrSiz  $rotrSiz" > $ThisTTY
+    echo "$_rotor_size  $rotrSiz" > $ThisTTY
     echo > $ThisTTY
   fi
 
@@ -244,10 +244,10 @@ function manualGenerate() {
     read
 
     if [ -n "$BOARD_engine" ]  ; then
-      echo -e "\E[1A$Char $cnt:  $(($wndow/$rotrSiz)) $Rnd" > $ThisTTY
+      echo -e "\E[1A$_character $cnt:  $(($wndow/$rotrSiz)) $_rounds" > $ThisTTY
     else
       echo -ne '\E[1A\E[K' > $ThisTTY
-      [ $wndow -lt $minStep ] && echo -n "$slowDown"
+      [ $wndow -lt $minStep ] && echo -n "$_slow_down_please"
     fi
     wndow=wndow%rotrSiz
     rndPaswd+="${rotor:$wndow:1}"
