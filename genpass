@@ -30,7 +30,7 @@ case $LANG in
     readonly _slow_down_please='請減慢速度！'
     readonly _character='字元'
     readonly _rounds='轉'
-    readonly _help_page="$( cat <<- EOF
+    readonly _help_page="$( (while read ; do echo "$REPLY" ; done) <<- EOF
 	*** 轉輪式隨機密碼產生器 ***
 
 	請用 "./genpass [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]"
@@ -51,7 +51,7 @@ case $LANG in
 	　－－好記的密碼不好用，好用的密碼不好記－－
 	EOF
 	)"
-    readonly _error_message="$( cat <<- EOF
+    readonly _error_message="$( (while read ; do echo "$REPLY" ; done) <<- EOF
 	請用 "$0 [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]"
 
 	　或輸入 "$0 -h|--help" 取得說明
@@ -66,7 +66,7 @@ case $LANG in
     readonly _slow_down_please='Slow down, please!'
     readonly _character='Character'
     readonly _rounds='Rounds'
-    readonly _help_page="$( cat <<- EOF
+    readonly _help_page="$( (while read ; do echo "$REPLY" ; done) <<- EOF
 	*** Rotary Random Password Generator ***
 
 	Use "./genpass [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"
@@ -89,7 +89,7 @@ case $LANG in
 	 -- Easy passwords aren't strong, strong passwords aren't easy. --
 	EOF
 	)"
-    readonly _error_message="$( cat <<- EOF
+    readonly _error_message="$( (while read ; do echo "$REPLY" ; done) <<- EOF
 	Use "$0 [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"
 
 	   or "$0 -h|--help" for help.
