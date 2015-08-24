@@ -301,21 +301,47 @@ function autoGenerate() {
 }
 
 
+function colorize () {
+  local string="$1"
+  local out='\E[47m'
+  local char point
+
+  for ((point=0; point<${#string}; point++)) ; do
+    char="${string:$point:1}"
+    if [ "${char^}" == "$char" ] && [ "${char,}" != "$char" ] ; then
+      if [ "$Running" != "u" ] ; then
+        Running=u
+        out+='\E[31m'
+      fi
+      out+="$char"
+    elif  [ "${char^}" != "$char" ] && [ "${char,}" == "$char" ] ; then
+      if [ "$Running" != "l" ] ; then
+        Running=l
+        out+='\E[34m'
+      fi
+      out+="$char"
+    else
+      if [ "$Running" != "s" ] ; then
+        Running=s
+        out+='\E[30m'
+      fi
+      out+="$char"
+    fi
+  done
+  out+='\E[0m'
+
+  echo "$out"
+}
+
+
 function outputPasswd() {
   local rndPaswd="$1"
 
   if [ -n "$BOARD_color" ] ; then
-    rndPaswd="$( echo " $rndPaswd" \
-                  | sed 's/\\/\\\\/g ;
-                      s/\([a-z][a-z]*\)/ \1 /g ;
-                      s/\([A-Z][A-Z]*\)/ \1 /g ; s/  / /g ; s/ $// ;
-                      s/ \([a-z][a-z]*\)/\\E[34m\1/g ;
-                      s/ \([A-Z][A-Z]*\)/\\E[31m\1/g ;
-                      s/ /\\E[30m/g ; s/^/\\E[47m/ ; s/$/\\E[0m/' \
-              )"
+    echo -e "$( colorize "$rndPaswd" )"
+  else
+    echo "$rndPaswd"
   fi
-
-  echo -e "$rndPaswd"
 }
 
 
