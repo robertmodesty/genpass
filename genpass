@@ -10,7 +10,6 @@ readonly Lcase='abcdefghijklmnopqrstuvwxyz'
 readonly Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 readonly Nums='0123456789'
 readonly Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
-readonly ThisTTY="$( tty )"
 BOARD_color=""
 BOARD_lnth=8
 BOARD_candidStr=""
@@ -213,16 +212,16 @@ function candidateChars() {
 }
 
 
-function generatePasswd() {
+function generatePasswd_monitorOn3() {
 
   if [ -z "$BOARD_auto" ] ; then
-    manualGenerate "$@"
+    manualGenerate_monitorOn3 "$@"
   else
     autoGenerate "$@"
   fi
 }
 
-function manualGenerate() {
+function manualGenerate_monitorOn3() {
   local rotor="$1"
   declare -i rotrSiz=${#rotor} wndow=0
   declare -i wndoBndry=${SysMax}-${SysMax}%rotrSiz
@@ -236,12 +235,12 @@ function manualGenerate() {
   fi
 
   if [ -n "$BOARD_engine" ]  ; then
-    echo > $ThisTTY
-    echo "$_all_candidate_characters_are" > $ThisTTY
-    echo "$rotor" > $ThisTTY
-    echo > $ThisTTY
-    echo "$_rotor_size  $rotrSiz" > $ThisTTY
-    echo > $ThisTTY
+    echo >&3
+    echo "$_all_candidate_characters_are" >&3
+    echo "$rotor" >&3
+    echo >&3
+    echo "$_rotor_size  $rotrSiz" >&3
+    echo >&3
   fi
 
   for ((cnt=1; cnt<=$BOARD_lnth; cnt++)) ; do
@@ -258,9 +257,9 @@ function manualGenerate() {
     read
 
     if [ -n "$BOARD_engine" ]  ; then
-      echo -e "\E[1A$_character $cnt:  $(($wndow/$rotrSiz)) $_rounds" > $ThisTTY
+      echo -e "\E[1A$_character $cnt:  $(($wndow/$rotrSiz)) $_rounds" >&3
     else
-      echo -ne '\E[1A\E[K' > $ThisTTY
+      echo -ne '\E[1A\E[K' >&3
       [ $wndow -lt $minStep ] && echo -n "$_slow_down_please"
     fi
     wndow=wndow%rotrSiz
@@ -268,7 +267,7 @@ function manualGenerate() {
 
   done
 
-  echo -ne '\n\E[1A\E[K' > $ThisTTY
+  echo -ne '\n\E[1A\E[K' >&3
   echo "$rndPaswd"
 }
 
@@ -352,7 +351,9 @@ function main() {
 
   rotor="$( candidateChars )"
 
-  rndPaswd="$( generatePasswd "$rotor" )"
+  exec 3>&1
+  rndPaswd="$( generatePasswd_monitorOn3 "$rotor" )"
+  exec 3>&-
 
   outputPasswd "$rndPaswd"
 }
