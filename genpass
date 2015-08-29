@@ -32,7 +32,7 @@ case $LANG in
     readonly _help_page="$( (while read ; do echo "$REPLY" ; done) <<- EOF
 	*** 轉輪式隨機密碼產生器 ***
 
-	請用 "./genpass [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]"
+	請用 "$0 [-a] [-c|-n] [密碼長度] [l][u][n][s] [-s ...]"
 	    l:  小寫字母     u:  大寫字母
 	    n:  數字　　     s:  其他符號    ( 預設值： luns )
 	    -e:  簡易模式，使用 'lsunln' 作為候選符號的組合方式
@@ -68,7 +68,7 @@ case $LANG in
     readonly _help_page="$( (while read ; do echo "$REPLY" ; done) <<- EOF
 	*** Rotary Random Password Generator ***
 
-	Use "./genpass [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"
+	Use "$0 [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]"
 	    l:  lowercase   u:  uppercase
 	    n:  numbers     s:  other symbol    ( default:  luns )
 	    -e:  easy mode, use 'lsunln' as the composition of the candidates
@@ -122,7 +122,8 @@ function errOut() {
 
 
 function analysisArgs() {
-  local arg cnt
+  declare -i cnt
+  local arg
 
   ### Special arguments ###
   if [ "$#" == "1" ] && [ "$1" == "-h" ] || [ "$1" == "--help" ] ; then
@@ -223,10 +224,10 @@ function generatePasswd_monitorOn3() {
 
 function manualGenerate_monitorOn3() {
   local rotor="$1"
-  declare -i rotrSiz=${#rotor} wndow=0
+  declare -i cnt rotrSiz=${#rotor} wndow=0
   declare -i wndoBndry=${SysMax}-${SysMax}%rotrSiz
   local minStep=$(( $rotrSiz * 100 ))
-  local cnt rndPaswd
+  local rndPaswd
 
   if integer_large_enough ; then
     local IntegerLargeEnough=true
@@ -249,12 +250,13 @@ function manualGenerate_monitorOn3() {
       until read -t 0 ; do
           wndow=wndow+1
       done
+      read
     else
       until read -t 0 ; do
           wndow=(wndow+1)%wndoBndry
       done
+      read
     fi
-    read
 
     if [ -n "$BOARD_engine" ]  ; then
       echo -e "\E[1A$_character $cnt:  $(($wndow/$rotrSiz)) $_rounds" >&3
@@ -273,10 +275,9 @@ function manualGenerate_monitorOn3() {
 
 function autoGenerate() {
   local rotor="$1"
-  declare -i rotrSiz=${#rotor} wndow=0
+  declare -i cnt rotrSiz=${#rotor} wndow
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
-  local minStep=$(( $rotrSiz * 100 ))
-  local cnt rndPaswd
+  local rndPaswd
 
   while [ $unitBndry -lt $rotrSiz ] ; do
     unitBits=unitBits+1
@@ -360,4 +361,3 @@ function main() {
 
 
 main "$@"
-
