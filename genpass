@@ -1,7 +1,7 @@
 #!/bin/bash
 #################################################################
 #   Rotary Random Password Generator                            #
-#                     By Robert D. Wei (Freedman) 2015 July     #
+#                     By Robert D. Wei (Freedman) 2015 Nov.     #
 #                                               License: GPL 2  #
 #################################################################
 readonly SysMax=2147483647
@@ -113,7 +113,7 @@ function integer_large_enough() {
 }
 
 
-function errOut() {
+function err_out() {
   echo
   echo "$_error_message"
   echo
@@ -121,7 +121,7 @@ function errOut() {
 }
 
 
-function analysisArgs() {
+function analysis_arguments() {
   declare -i cnt
   local arg
 
@@ -176,20 +176,20 @@ function analysisArgs() {
           "a")  BOARD_auto="1"   ;;
           "c")  BOARD_color="1"  ;;
           "n")  BOARD_color=""   ;;
-          *)    errOut 1   ;;
+          *)    err_out 1   ;;
         esac
       done
       shift
       continue
     fi
 
-    errOut 1
+    err_out 1
 
   done
 }
 
 
-function candidateChars() {
+function candidate_characters() {
   local rotor="$BOARD_candidStr"
 
   if [ -n "$BOARD_ezmod" ] ; then
@@ -218,7 +218,7 @@ function generatePasswd_monitorOn3() {
   if [ -z "$BOARD_auto" ] ; then
     manualGenerate_monitorOn3 "$@"
   else
-    autoGenerate "$@"
+    auto_generate "$@"
   fi
 }
 
@@ -273,7 +273,7 @@ function manualGenerate_monitorOn3() {
   echo "$rndPaswd"
 }
 
-function autoGenerate() {
+function auto_generate() {
   local rotor="$1"
   declare -i cnt rotrSiz=${#rotor} wndow
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
@@ -348,9 +348,9 @@ function outputPasswd() {
 function main() {
   local rotor rndPaswd
 
-  analysisArgs "$@"
+  analysis_arguments "$@"
 
-  rotor="$( candidateChars )"
+  rotor="$( candidate_characters )"
 
   exec 3>&1
   rndPaswd="$( generatePasswd_monitorOn3 "$rotor" )"
