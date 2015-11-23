@@ -6,10 +6,10 @@
 #################################################################
 readonly SysMax=2147483647
 readonly OneMinuteCounts=100000000
-readonly Lcase='abcdefghijklmnopqrstuvwxyz'
-readonly Ucase='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-readonly Nums='0123456789'
-readonly Symbs='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+readonly LowerCaseLetters='abcdefghijklmnopqrstuvwxyz'
+readonly UpperCaseLetters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+readonly Numbers='0123456789'
+readonly Symbles='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
 BOARD_color=""
 BOARD_lnth=8
 BOARD_candidStr=""
@@ -102,13 +102,13 @@ esac
 
 
 function integer_large_enough() {
-  declare -i BigInt=1
+  declare -i bigInt=1
 
-  while [ $BigInt -lt $(( BigInt *2 )) ] ; do
-    BigInt=BigInt*2
+  while [ $bigInt -lt $(( bigInt *2 )) ] ; do
+    bigInt=bigInt*2
   done
 
-  test $(( $BigInt / $OneMinuteCounts )) -gt 1440
+  test $(( $bigInt / $OneMinuteCounts )) -gt 1440
   return $?
 }
 
@@ -202,10 +202,10 @@ function candidate_characters() {
 
   for ((n=0; n<${#BOARD_chrCmp}; n++)) ; do
     case "${BOARD_chrCmp:$n:1}" in
-      "l")  rotor+="$Lcase"  ;;
-      "u")  rotor+="$Ucase"  ;;
-      "n")  rotor+="$Nums"   ;;
-      "s")  rotor+="$Symbs"  ;;
+      "l")  rotor+="$LowerCaseLetters"  ;;
+      "u")  rotor+="$UpperCaseLetters"  ;;
+      "n")  rotor+="$Numbers"   ;;
+      "s")  rotor+="$Symbles"  ;;
     esac
   done
 
@@ -230,9 +230,9 @@ function manualGenerate_monitorOn3() {
   local rndPaswd
 
   if integer_large_enough ; then
-    local IntegerLargeEnough=true
+    local integerLargeEnough=true
   else
-    local IntegerLargeEnough=false
+    local integerLargeEnough=false
   fi
 
   if [ -n "$BOARD_engine" ]  ; then
@@ -246,7 +246,7 @@ function manualGenerate_monitorOn3() {
 
   for ((cnt=1; cnt<=$BOARD_lnth; cnt++)) ; do
 
-    if $IntegerLargeEnough ; then
+    if $integerLargeEnough ; then
       until read -t 0 ; do
           wndow=wndow+1
       done
