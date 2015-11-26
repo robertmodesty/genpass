@@ -16,7 +16,7 @@ BOARD_candidStr=""
 BOARD_ezmod=""
 BOARD_auto=""
 BOARD_chrCmp=""
-BOARD_engine=""
+BOARD_engineer=""
 
 
 
@@ -133,8 +133,8 @@ function analysis_arguments() {
     exit 0
   fi
 
-  if [ "$1" == "engine" ] ; then
-    BOARD_engine="1"
+  if [ "$1" == "engineer" ] || [ "$1" == "programer" ]; then
+    BOARD_engineer="1"
     BOARD_color="1"
     BOARD_lnth=12
     shift
@@ -235,7 +235,7 @@ function manualGenerate_monitorOn3() {
     local integerLargeEnough=false
   fi
 
-  if [ -n "$BOARD_engine" ]  ; then
+  if [ -n "$BOARD_engineer" ]  ; then
     echo >&3
     echo "$_all_candidate_characters_are" >&3
     echo "$rotor" >&3
@@ -258,7 +258,7 @@ function manualGenerate_monitorOn3() {
       read
     fi
 
-    if [ -n "$BOARD_engine" ]  ; then
+    if [ -n "$BOARD_engineer" ]  ; then
       echo -e "\E[1A$_character $cnt:  $(($wndow/$rotrSiz)) $_rounds" >&3
     else
       echo -ne '\E[1A\E[K' >&3
