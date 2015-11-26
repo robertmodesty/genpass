@@ -17,7 +17,7 @@ BOARD_ezmod=""
 BOARD_auto=""
 BOARD_chrCmp=""
 BOARD_engineer=""
-
+BOARD_rndPaswd=""
 
 
 
@@ -213,21 +213,20 @@ function candidate_characters() {
 }
 
 
-function generatePasswd_monitorOn3() {
+function generate_password_into_BOARD_rndPasswd() {
 
   if [ -z "$BOARD_auto" ] ; then
-    manualGenerate_monitorOn3 "$@"
+    manual_generate_password "$@"
   else
-    auto_generate "$@"
+    auto_generate_password "$@"
   fi
 }
 
-function manualGenerate_monitorOn3() {
+function manual_generate_password() {
   local rotor="$1"
   declare -i cnt rotrSiz=${#rotor} wndow=0
   declare -i wndoBndry=${SysMax}-${SysMax}%rotrSiz
   local minStep=$(( $rotrSiz * 100 ))
-  local rndPaswd
 
   if integer_large_enough ; then
     local integerLargeEnough=true
@@ -236,12 +235,12 @@ function manualGenerate_monitorOn3() {
   fi
 
   if [ -n "$BOARD_engineer" ]  ; then
-    echo >&3
-    echo "$_all_candidate_characters_are" >&3
-    echo "$rotor" >&3
-    echo >&3
-    echo "$_rotor_size  $rotrSiz" >&3
-    echo >&3
+    echo
+    echo "$_all_candidate_characters_are"
+    echo "$rotor"
+    echo
+    echo "$_rotor_size  $rotrSiz"
+    echo
   fi
 
   for ((cnt=1; cnt<=$BOARD_lnth; cnt++)) ; do
@@ -259,25 +258,23 @@ function manualGenerate_monitorOn3() {
     fi
 
     if [ -n "$BOARD_engineer" ]  ; then
-      echo -e "\E[1A$_character $cnt:  $(($wndow/$rotrSiz)) $_rounds" >&3
+      echo -e "\E[1A$_character $cnt:  $(($wndow/$rotrSiz)) $_rounds"
     else
-      echo -ne '\E[1A\E[K' >&3
-      [ $wndow -lt $minStep ] && echo -n "$_slow_down_please"
+      echo -ne '\E[1A\E[K'
+      test $wndow -lt $minStep && echo -n "$_slow_down_please"
     fi
     wndow=wndow%rotrSiz
-    rndPaswd+="${rotor:$wndow:1}"
+    BOARD_rndPaswd+="${rotor:$wndow:1}"
 
   done
 
-  echo -ne '\n\E[1A\E[K' >&3
-  echo "$rndPaswd"
+  echo -ne '\n\E[1A\E[K'
 }
 
-function auto_generate() {
+function auto_generate_password() {
   local rotor="$1"
   declare -i cnt rotrSiz=${#rotor} wndow
   declare -i unitBndry=1 unitBits=0 rndBits=0 rndDat=0
-  local rndPaswd
 
   while [ $unitBndry -lt $rotrSiz ] ; do
     unitBits=unitBits+1
@@ -295,9 +292,8 @@ function auto_generate() {
       rndDat=rndDat/unitBndry
       rndBits=rndBits-unitBits
     done
-    rndPaswd+="${rotor:$wndow:1}"
+    BOARD_rndPaswd+="${rotor:$wndow:1}"
   done
-  echo "$rndPaswd"
 }
 
 
@@ -334,29 +330,26 @@ function colorize () {
 }
 
 
-function outputPasswd() {
-  local rndPaswd="$1"
+function output_password() {
 
   if [ -n "$BOARD_color" ] ; then
-    echo -e "$( colorize "$rndPaswd" )"
+    echo -e "$( colorize "$BOARD_rndPaswd" )"
   else
-    echo "$rndPaswd"
+    echo "$BOARD_rndPaswd"
   fi
 }
 
 
 function main() {
-  local rotor rndPaswd
+  local rotor
 
   analysis_arguments "$@"
 
   rotor="$( candidate_characters )"
 
-  exec 3>&1
-  rndPaswd="$( generatePasswd_monitorOn3 "$rotor" )"
-  exec 3>&-
+  generate_password_into_BOARD_rndPasswd "$rotor"
 
-  outputPasswd "$rndPaswd"
+  output_password
 }
 
 
