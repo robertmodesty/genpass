@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# *** Random Password Generator Mini ** under GPL 2 ** by Robert D. Wei ***
+
+characters+='abcdefghijklmnopqrstuvwxyz'
+characters+='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+characters+='0123456789'
+characters+='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+
+length=8
+
+declare -i pointer=0
+for ((cnt=1; cnt<=$length; cnt++)) ; do
+    until read -t 0 ; do
+        pointer=pointer+1
+    done ; read
+    echo -ne '\E[1A\E[K'
+    pointer=pointer%${#characters}
+    password+=${characters:$pointer:1}
+done
+echo $password
