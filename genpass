@@ -9,7 +9,7 @@ readonly OneMinuteCounts=100000000
 readonly LowerCaseLetters='abcdefghijklmnopqrstuvwxyz'
 readonly UpperCaseLetters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 readonly Numbers='0123456789'
-readonly Symbles='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+readonly Symbles='!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~'
 BOARD_color=""
 BOARD_lnth=8
 BOARD_candidStr=""

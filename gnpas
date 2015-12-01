@@ -5,7 +5,7 @@
 characters+='abcdefghijklmnopqrstuvwxyz'
 characters+='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 characters+='0123456789'
-characters+='!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+characters+='!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~'
 
 length=8
 
