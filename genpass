@@ -189,7 +189,7 @@ function analysis_arguments() {
 }
 
 
-function candidate_characters() {
+function get_candidate_characters() {
   local rotor="$BOARD_candidStr"
 
   if [ -n "$BOARD_ezmod" ] ; then
@@ -345,7 +345,7 @@ function main() {
 
   analysis_arguments "$@"
 
-  rotor="$( candidate_characters )"
+  rotor="$( get_candidate_characters )"
 
   generate_password_into_BOARD_rndPasswd "$rotor"
 
