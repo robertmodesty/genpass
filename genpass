@@ -101,17 +101,6 @@ esac
 
 
 
-function integer_large_enough() {
-  declare -i bigInt=1
-
-  while [ $bigInt -lt $(( bigInt *2 )) ] ; do
-    bigInt=bigInt*2
-  done
-
-  test $(( $bigInt / $OneMinuteCounts )) -gt 1440
-  return $?
-}
-
 
 function err_out() {
   echo
@@ -119,7 +108,6 @@ function err_out() {
   echo
   exit $1
 }
-
 
 function analysis_arguments() {
   declare -i cnt
@@ -189,6 +177,8 @@ function analysis_arguments() {
 }
 
 
+
+
 function get_candidate_characters() {
   local rotor="$BOARD_candidStr"
 
@@ -213,13 +203,17 @@ function get_candidate_characters() {
 }
 
 
-function generate_password_into_BOARD_rndPasswd() {
 
-  if [ -z "$BOARD_auto" ] ; then
-    manual_generate_password "$@"
-  else
-    auto_generate_password "$@"
-  fi
+
+function integer_large_enough() {
+  declare -i bigInt=1
+
+  while [ $bigInt -lt $(( bigInt *2 )) ] ; do
+    bigInt=bigInt*2
+  done
+
+  test $(( $bigInt / $OneMinuteCounts )) -gt 1440
+  return $?
 }
 
 function manual_generate_password() {
@@ -290,6 +284,17 @@ function auto_generate_password() {
   done
 }
 
+function generate_password_into_BOARD_rndPasswd() {
+
+  if [ -z "$BOARD_auto" ] ; then
+    manual_generate_password "$@"
+  else
+    auto_generate_password "$@"
+  fi
+}
+
+
+
 
 function colorize () {
   local string="$1"
@@ -323,7 +328,6 @@ function colorize () {
   echo "$out"
 }
 
-
 function output_password() {
 
   if [ -n "$BOARD_color" ] ; then
@@ -332,6 +336,8 @@ function output_password() {
     echo "$BOARD_rndPaswd"
   fi
 }
+
+
 
 
 function main() {
