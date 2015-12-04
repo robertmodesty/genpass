@@ -228,12 +228,6 @@ function manual_generate_password() {
   declare -i wndoBndry=${SysMax}-${SysMax}%rotrSiz
   local minStep=$(( $rotrSiz * 100 ))
 
-  if integer_large_enough ; then
-    local integerLargeEnough=true
-  else
-    local integerLargeEnough=false
-  fi
-
   if [ -n "$BOARD_engineer" ]  ; then
     echo
     echo "$_all_candidate_characters_are"
@@ -245,7 +239,7 @@ function manual_generate_password() {
 
   for ((cnt=1; cnt<=$BOARD_lnth; cnt++)) ; do
 
-    if $integerLargeEnough ; then
+    if integer_large_enough ; then
       until read -t 0 ; do
           wndow=wndow+1
       done
