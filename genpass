@@ -4,6 +4,10 @@
 #                     By Robert D. Wei (Freedman) 2015 Nov.     #
 #                                               License: GPL 2  #
 #################################################################
+
+
+###### Settings ######
+
 readonly SysMax=2147483647
 readonly OneMinuteCounts=100000000
 readonly LowerCaseLetters='abcdefghijklmnopqrstuvwxyz'
@@ -18,8 +22,6 @@ BOARD_auto=""
 BOARD_chrCmp=""
 BOARD_engineer=""
 BOARD_rndPaswd=""
-
-
 
 
 case $LANG in
@@ -102,6 +104,10 @@ esac
 
 
 
+####################
+# Step 1:  analysis arguments
+########################################################################
+
 function err_out() {
   echo
   echo "$_error_message"
@@ -179,6 +185,10 @@ function analysis_arguments() {
 
 
 
+####################
+# Step 2:  prepare candidate character
+########################################################################
+
 function get_candidate_characters() {
   local rotor="$BOARD_candidStr"
 
@@ -204,6 +214,10 @@ function get_candidate_characters() {
 
 
 
+
+####################
+# Step 3:  generate password
+########################################################################
 
 function integer_large_enough() {
   declare -i bigInt=1
@@ -296,6 +310,10 @@ function generate_password_into_BOARD_rndPasswd() {
 
 
 
+####################
+# Step 4:  print password on standard output
+########################################################################
+
 function colorize () {
   local string="$1"
   local out='\E[47m'
@@ -340,6 +358,10 @@ function output_password() {
 
 
 
+####################
+#   Main function
+########################################################################
+
 function main() {
   local rotor
 
@@ -352,5 +374,10 @@ function main() {
   output_password
 }
 
+
+
+
+
+##### Start this program ######
 
 main "$@"
