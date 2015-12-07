@@ -6,7 +6,7 @@
 
   This program generates characters for password like rolling a rotor and pause it suddenly by pressing [Enter] key.  This make the password unpredictable.  The length of password, what characters as candidates, can be specified by arguments.
 
-  In the 'Auto' mode, the generator does not "roll the rotor", but use the /dev/random as random pool instead.  In some OS, this may cause the password predictable.  It may not be a good idea using this mode.
+  In the 'Auto' mode, the generator does not "roll the rotor", but use the /dev/random as random pool instead.  In some OS, this may cause the password predictable.  It may not be a good idea using this mode.  But, this mode make the script able to be called by other script or program as a password source.  The other program can get a password through this script, and use it as an one-time-password or on some automated operation.
 
   For security reasons, there is a mini version named "gnpas".  User can read it fast and easily, edit the setting in it, and execute it by commanding './gnpas'.  The mini version does not need any command argument.
 
