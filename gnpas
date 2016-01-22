@@ -7,7 +7,7 @@ characters+='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 characters+='0123456789'
 characters+='!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~'
 
-length=8
+length="${1:-8}"
 
 declare -i pointer=0
 for ((cnt=1; cnt<=$length; cnt++)) ; do
