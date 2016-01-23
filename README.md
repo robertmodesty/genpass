@@ -8,7 +8,7 @@
 
   In the 'Auto' mode, the generator does not "roll the rotor", but use the /dev/random as random pool instead.  In some OS, this may cause the password predictable.  It may not be a good idea using this mode.  But, this mode make the script able to be called by other script or program as a password source.  The other program can get a password through this script, and use it as an one-time-password or on some automated operation.
 
-  For security reasons, there is a mini version named "gnpas".  User can read it fast and easily, edit the setting in it, and execute it by commanding './gnpas'.  The mini version does not need any command argument.
+  For security reasons, there is a mini version named "gnpas".  User can read it fast and easily, edit the setting in it, and execute it by commanding './gnpas'.  The mini version uses only one command argument as password length.
 
   To use this, just get prepared, then execute this program and get the password.  DO NOT re-generate a password for some unimportant reasons. Over filtering will turn your random password predictable.  For example, throwing away nine passwords from ten only because they are too hard to remember, then only 10% of all possible passwords will be use.  An attacker may speed up ten times on guessing it by knowing that.
 
@@ -16,7 +16,8 @@
 
 SYNOPSIS
 
-        ./genpass [-a] [-c|-n] [length of password] [l][u][n][s] [-s ...]
+        ./genpass [-a] [-c|-n] [LENGTH OF PASSWORD] [l][u][n][s] [-s ...]
+        ./gnpas [LENGTH OF PASSWORD]
 
 ARGUMENTS
 
