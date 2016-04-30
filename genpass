@@ -117,7 +117,6 @@ function err_out() {
 
 function analysis_arguments() {
   declare -i cnt
-  local arg
 
   ### Special arguments ###
   if [ "$#" == "1" ] && [ "$1" == "-h" ] || [ "$1" == "--help" ] ; then
@@ -138,18 +137,14 @@ function analysis_arguments() {
   while [ "$1" != "" ] ; do
 
     #### is length ####
-    arg=$1
-    while [ "$arg" != "${arg#[0-9]}" ] ; do arg="${arg#[0-9]}" ; done
-    if [ "$arg" == "" ] ; then
+    if [ "${1//[0-9]/}" == "" ] ; then
       BOARD_lnth="$1"
       shift
       continue
     fi
 
     #### is composition of candidates ####
-    arg=$1
-    while [ "$arg" != "${arg#[luns]}" ] ; do arg="${arg#[luns]}" ; done
-    if [ -z "$arg" ] ; then
+    if [ "${1//[luns]/}" == "" ] ; then
       BOARD_chrCmp+=$1
       shift
       continue
