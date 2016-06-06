@@ -137,8 +137,7 @@ function analysis_arguments() {
   while [ "$1" != "" ] ; do
 
     #### is length ####
-    if [ "${1//[0-9]/}" == "" ] \
-     || ( [ "${1//[0-9a-fA-F]/}" = "x" ] && [ "${1:0:2}" = "0x" ] ) ; then
+    if [ "${1//[0-9]/}" == "" ] ; then
       BOARD_lnth="$1"
       shift
       continue
