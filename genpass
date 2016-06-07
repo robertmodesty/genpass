@@ -139,6 +139,7 @@ function analysis_arguments() {
     #### is length ####
     if [ "${1//[0-9]/}" == "" ] ; then
       BOARD_lnth="$1"
+      while [ "${BOARD_lnth:0:1}" == "0" ] ; do BOARD_lnth="${BOARD_lnth:1}" ; done
       shift
       continue
     fi
